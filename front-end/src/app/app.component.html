@@ -1,0 +1,102 @@
+<app-loading-spinner></app-loading-spinner>
+
+<div class="container">
+
+  <div class="">
+    <h1>Stocks</h1>
+
+    <form [formGroup]="searchForm">
+      <mat-form-field appearance="standard">
+        <mat-label>Search</mat-label>
+        <input matInput
+               (keyup)="search()"
+               type="text"
+               formControlName="query"
+               name="query"
+               placeholder="Search columns"
+        >
+      </mat-form-field>
+    </form>
+
+    <table class="first-table"
+           mat-table
+           [dataSource]="sortedStocks"
+           matSort
+           (matSortChange)="sortStocks($event)">
+
+      <ng-container matColumnDef="stock">
+        <mat-header-cell mat-header-cell
+                         *matHeaderCellDef
+                         mat-sort-header="stocks">Stocks
+        </mat-header-cell>
+        <td mat-cell *matCellDef="let element">{{element.stock}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="industry">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="industry">Industry
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.industry}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sector">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="sector">Sector
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.sector}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="currency_Code">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="currency_Code">Currency Code
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.currency_Code}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="stocksHeaders"></tr>
+      <tr mat-row (click)="getRow(row)" *matRowDef="let row; columns: stocksHeaders"></tr>
+    </table>
+  </div>
+
+  <div *ngIf="stockSelected">
+    <h1>{{stockName}}</h1>
+    <table class="second-table"
+           mat-table
+           [dataSource]="sortedStockValueItems"
+           matSort
+           (matSortChange)="sortStockItemValues($event)">
+      <ng-container matColumnDef="stock">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="stock">Stock
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.stock}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="date">Date
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.date| date: 'MM/dd/YYYY'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <th mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="value">Value
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.value}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="stockValueItemHeaders"></tr>
+      <tr mat-row *matRowDef="let row; columns: stockValueItemHeaders"></tr>
+
+    </table>
+
+    <button mat-raised-button (click)="exportFile()">Export to JSON</button>
+  </div>
+</div>
